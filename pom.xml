@@ -14,6 +14,15 @@
     </properties>
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -50,11 +59,11 @@
             <version>2.12.5</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+        <!-- https://mvnrepository.com/artifact/org.jadira.usertype/usertype.core -->
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
+            <groupId>org.jadira.usertype</groupId>
+            <artifactId>usertype.core</artifactId>
+            <version>7.0.0.CR1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jadira.usertype/usertype.jodatime -->
@@ -64,6 +73,12 @@
             <version>2.0.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
 
 
     </dependencies>

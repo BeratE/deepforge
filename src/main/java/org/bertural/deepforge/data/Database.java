@@ -45,4 +45,8 @@ public class Database {
         logger.info("Build hibernate session factory..");
         factory = config.buildSessionFactory();
     }
+
+    public SessionFactory getFactory() {
+        return factory;
+    }
 }

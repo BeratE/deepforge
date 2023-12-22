@@ -1,5 +1,8 @@
 package org.bertural.deepforge.telnet;
 
+import org.bertural.deepforge.data.Authentication;
+import org.bertural.deepforge.data.entities.EntityUser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,8 +17,9 @@ public class TelnetClientThread implements Runnable {
 
     private boolean running = false;
 
-    private String username;
     private List<PrintWriter> allUserWriters;
+
+    private EntityUser user = null;
 
 
     public TelnetClientThread(Socket socket, List<PrintWriter> allUserWriters) {
@@ -24,9 +28,6 @@ public class TelnetClientThread implements Runnable {
         try {
             this.writer = new PrintWriter(socket.getOutputStream());
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            this.allUserWriters.add(this.writer);
-
             this.running = true;
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -35,9 +36,10 @@ public class TelnetClientThread implements Runnable {
 
     @Override
     public void run() {
-        if (running) {
-            running = connect();
-            broadcast("Joined the chat room.");
+        if (connect()) {
+            writer.println("Welcome " + user.getLogin() + "!");
+            writer.flush();
+            broadcast("Joined the chat room!");
             while (running) {
                 String message = readInput();
                 if (message == null) {
@@ -47,34 +49,26 @@ public class TelnetClientThread implements Runnable {
                 }
             }
         }
-
         shutdown();
     }
 
     private boolean connect() {
         writer.print("Enter username: ");
         writer.flush();
-        username = readInput();
-        return true;
-    }
+        String username = readInput();
+        writer.print("Enter password: ");
+        writer.flush();
+        String password = readInput();
 
-    private void shutdown() {
-        System.out.println("Shutdown connection");
-        allUserWriters.remove(writer);
-        this.closeClosable(reader);
-        this.closeClosable(writer);
-        this.closeClosable(socket);
-    }
-
-    /** Close an AutoClosable resource */
-    private void closeClosable(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
+        user = Authentication.login(username, password);
+        if (user == null) {
+            writer.println("Invalid login!");
+            writer.flush();
+            return false;
         }
+
+        allUserWriters.add(writer);
+        return true;
     }
 
     /** IO Management */
@@ -90,11 +84,32 @@ public class TelnetClientThread implements Runnable {
     }
 
     private void broadcast(String message) {
-        final String line = username + ": " + message;
+        final String line = user.getLogin() + ": " + message;
         for (PrintWriter w : allUserWriters) {
             if (!w.equals(writer)) {
                 w.println(line);
                 w.flush();
+            }
+        }
+    }
+
+    /** Shutdown / Resource Management */
+
+    private void shutdown() {
+        System.out.println("Shutdown connection..");
+        allUserWriters.remove(writer);
+        this.closeClosable(reader);
+        this.closeClosable(writer);
+        this.closeClosable(socket);
+    }
+
+    /** Close an AutoClosable resource */
+    private void closeClosable(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             }
         }
     }
