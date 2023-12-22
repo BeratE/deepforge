@@ -10,53 +10,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TelnetServer {
-
-    private static Logger logger = LoggerFactory.getLogger(TelnetServer.class);
-
-    private final int socket;
-    private ServerSocket serverSocket = null;
-    private List<PrintWriter> allUserWriters = new ArrayList<>();
+public class TelnetServer extends Server {
 
     public TelnetServer() {
         this(6969);
     }
 
     public TelnetServer(int socket) {
-        this.socket = socket;
-        try {
-            serverSocket = new ServerSocket(socket);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        super(socket);
+
     }
 
-    public void run() {
-        logger.info("Starting telnet server..");
-        while(true) {
-            try {
-                Socket newSocket = serverSocket.accept();
-                TelnetClientThread client = new TelnetClientThread(newSocket, allUserWriters);
-                Thread t = new Thread(client);
-                t.start();
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-                break;
-            }
-        }
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        }
-    }
-
-    private void broadcast(String message) {
-        final String line = "SERVER: " + message;
-        for (PrintWriter w : allUserWriters) {
-            w.println(line);
-        }
+    @Override
+    protected void doLoop(long iteration) throws Exception {
+        Socket newSocket = serverSocket.accept();
+        ClientThread client = new ClientThread(newSocket, allUserWriters);
+        Thread t = new Thread(client);
+        t.start();
     }
 }

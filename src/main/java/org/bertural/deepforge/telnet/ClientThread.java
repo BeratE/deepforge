@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
-public class TelnetClientThread implements Runnable {
+public class ClientThread implements Runnable {
     private final Socket socket;
     private PrintWriter writer;
     private BufferedReader reader;
@@ -19,10 +19,11 @@ public class TelnetClientThread implements Runnable {
 
     private List<PrintWriter> allUserWriters;
 
+    private String prompt = "> ";
     private EntityUser user = null;
 
 
-    public TelnetClientThread(Socket socket, List<PrintWriter> allUserWriters) {
+    public ClientThread(Socket socket, List<PrintWriter> allUserWriters) {
         this.socket = socket;
         this.allUserWriters = allUserWriters;
         try {
