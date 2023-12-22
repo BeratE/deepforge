@@ -1,5 +1,6 @@
 package org.bertural.deepforge;
 
+import org.bertural.deepforge.data.Database;
 import org.bertural.deepforge.telnet.TelnetServer;
 
 public class Main {

@@ -1,4 +1,4 @@
-package org.bertural.deepforge;
+package org.bertural.deepforge.data;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class Database {
-    public static final String ENTITIES_PACKAGE = "org.bertural.deepforge.entities";
+    public static final String ENTITIES_PACKAGE = "org.bertural.deepforge.data.entities";
     public static Logger logger = LoggerFactory.getLogger(Database.class);
 
     private static Database instance = null;
@@ -41,7 +41,7 @@ public class Database {
         for (Class<?> c : classes) {
             config.addAnnotatedClass(c);
         }
-        config.configure(new File("hibernate.deepforge.cfg.xml"));
+        config.configure(new File("hibernate.sqlite.cfg.xml"));
         logger.info("Build hibernate session factory..");
         factory = config.buildSessionFactory();
     }

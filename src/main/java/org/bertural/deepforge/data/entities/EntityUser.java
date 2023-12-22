@@ -1,4 +1,4 @@
-package org.bertural.deepforge.entities;
+package org.bertural.deepforge.data.entities;
 
 import org.bertural.deepforge.DMC;
 import org.hibernate.annotations.Type;
