@@ -1,3 +1,8 @@
+package org.bertural.deepforge.telnet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -5,17 +10,19 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server {
+public class TelnetServer {
+
+    private static Logger logger = LoggerFactory.getLogger(TelnetServer.class);
 
     private final int socket;
     private ServerSocket serverSocket = null;
     private List<PrintWriter> allUserWriters = new ArrayList<>();
 
-    public Server() {
+    public TelnetServer() {
         this(6969);
     }
 
-    public Server(int socket) {
+    public TelnetServer(int socket) {
         this.socket = socket;
         try {
             serverSocket = new ServerSocket(socket);
@@ -25,14 +32,15 @@ public class Server {
     }
 
     public void run() {
+        logger.info("Starting telnet server..");
         while(true) {
             try {
                 Socket newSocket = serverSocket.accept();
-                ClientThread client = new ClientThread(newSocket, allUserWriters);
+                TelnetClientThread client = new TelnetClientThread(newSocket, allUserWriters);
                 Thread t = new Thread(client);
                 t.start();
             } catch (Exception e) {
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
                 break;
             }
         }
@@ -40,7 +48,7 @@ public class Server {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
             }
         }
     }

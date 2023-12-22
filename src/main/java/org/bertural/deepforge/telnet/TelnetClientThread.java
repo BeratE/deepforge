@@ -1,3 +1,5 @@
+package org.bertural.deepforge.telnet;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
-public class ClientThread implements Runnable {
+public class TelnetClientThread implements Runnable {
     private final Socket socket;
     private PrintWriter writer;
     private BufferedReader reader;
@@ -16,7 +18,7 @@ public class ClientThread implements Runnable {
     private List<PrintWriter> allUserWriters;
 
 
-    public ClientThread(Socket socket, List<PrintWriter> allUserWriters) {
+    public TelnetClientThread(Socket socket, List<PrintWriter> allUserWriters) {
         this.socket = socket;
         this.allUserWriters = allUserWriters;
         try {
