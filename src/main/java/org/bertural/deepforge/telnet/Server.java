@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class Server extends Thread {
     protected static Logger logger = LoggerFactory.getLogger(Server.class);
 
-    protected final int socket;
+    protected final int port;
     protected ServerSocket serverSocket = null;
     protected List<PrintWriter> allUserWriters = new ArrayList<>();
 
@@ -23,10 +23,10 @@ public abstract class Server extends Thread {
         this(6969);
     }
 
-    public Server(int socket) {
-        this.socket = socket;
+    public Server(int port) {
+        this.port = port;
         try {
-            serverSocket = new ServerSocket(socket);
+            serverSocket = new ServerSocket(port);
             isRunning = true;
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -51,11 +51,11 @@ public abstract class Server extends Thread {
     }
 
     private void startup() {
-        logger.info("Starting server " + getName() + "..");
+        logger.info("Starting server on " + getName() + "..");
     }
 
     private void shutdown() {
-        logger.info("Shutdown server " + getName() + "..");
+        logger.info("Shutdown server on " + getName() + "..");
         if (serverSocket != null) {
             try {
                 serverSocket.close();

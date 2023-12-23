@@ -4,7 +4,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:deepforge.db</property>
+        <!--<property name="hibernate.connection.url">jdbc:sqlite:deepforge.db</property>-->
         <property name="hibernate.dialect">org.sqlite.hibernate.dialect.SQLiteDialect</property>
         <property name="hibernate.generate_statistics">true</property>
         <property name="hibernate.show_sql">false</property>

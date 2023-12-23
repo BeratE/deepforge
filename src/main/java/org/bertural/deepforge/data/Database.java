@@ -14,8 +14,9 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class Database {
-    public static final String ENTITIES_PACKAGE = "org.bertural.deepforge.data.entities";
     public static Logger logger = LoggerFactory.getLogger(Database.class);
+    public static final String ENTITIES_PACKAGE = "org.bertural.deepforge.data.entities";
+    public static final String SQL_IMPL = "sqlite";
 
     private static Database instance = null;
     public static Database getInstance() {
@@ -24,6 +25,7 @@ public class Database {
         return instance;
     }
 
+    private String databaseFile = null;
     private Configuration config = null;
     private SessionFactory factory = null;
 
@@ -32,16 +34,19 @@ public class Database {
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
     }
 
-    public void configure() {
-        logger.info("Configuring hibernate database..");
+    public void configure(String databaseFile) {
+        logger.info("Configuring hibernate for database " + databaseFile + " (" + SQL_IMPL + ")..");
+        this.databaseFile = databaseFile;
         config = new Configuration();
+        logger.info("Collecting entities with reflections in " + ENTITIES_PACKAGE + "..");
         Set<Class<?>> classes = new HashSet<>();
         Reflections reflections = new Reflections(ENTITIES_PACKAGE, new Scanner[0]);
         classes.addAll(reflections.getTypesAnnotatedWith(Entity.class));
         for (Class<?> c : classes) {
             config.addAnnotatedClass(c);
         }
-        config.configure(new File("hibernate.sqlite.cfg.xml"));
+        config.setProperty("hibernate.connection.url", "jdbc:" + SQL_IMPL + ":" + databaseFile);
+        config.configure(new File("hibernate." + SQL_IMPL + ".cfg.xml"));
         logger.info("Build hibernate session factory..");
         factory = config.buildSessionFactory();
     }

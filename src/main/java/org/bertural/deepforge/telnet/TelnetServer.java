@@ -1,14 +1,6 @@
 package org.bertural.deepforge.telnet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TelnetServer extends Server {
 
@@ -16,8 +8,8 @@ public class TelnetServer extends Server {
         this(6969);
     }
 
-    public TelnetServer(int socket) {
-        super(socket);
+    public TelnetServer(int port) {
+        super(port);
 
     }
 
