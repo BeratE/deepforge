@@ -51,7 +51,7 @@ public class Database {
         factory = config.buildSessionFactory();
     }
 
-    public SessionFactory getFactory() {
-        return factory;
+    public static SessionFactory getFactory() {
+        return getInstance().factory;
     }
 }

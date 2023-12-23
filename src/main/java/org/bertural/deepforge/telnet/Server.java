@@ -14,7 +14,6 @@ public abstract class Server extends Thread {
 
     protected final int port;
     protected ServerSocket serverSocket = null;
-    protected List<PrintWriter> allUserWriters = new ArrayList<>();
 
     protected boolean isRunning = false;
     protected long iteration = 0;
@@ -29,7 +28,7 @@ public abstract class Server extends Thread {
             serverSocket = new ServerSocket(port);
             isRunning = true;
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -62,13 +61,6 @@ public abstract class Server extends Thread {
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
-        }
-    }
-
-    protected void broadcast(String message) {
-        final String line = "SERVER: " + message;
-        for (PrintWriter w : allUserWriters) {
-            w.println(line);
         }
     }
 }

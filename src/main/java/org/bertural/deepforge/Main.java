@@ -1,14 +1,15 @@
 package org.bertural.deepforge;
 
 import org.apache.commons.cli.*;
+import org.bertural.deepforge.data.Authentication;
 import org.bertural.deepforge.data.Database;
 import org.bertural.deepforge.telnet.TelnetServer;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 
 public class Main {
-
     private static Logger logger = LoggerFactory.logger(Main.class);
+
     private static final String APP_NAME = "deepforge";
 
     // Command line parsing
@@ -16,6 +17,7 @@ public class Main {
     private static CommandLineParser parser = null;
     private static HelpFormatter formatter = null;
 
+    // Basic configurations
     private static int    telnetPort   = 6969;
     private static String databaseFile = APP_NAME + ".db";
 
@@ -27,7 +29,7 @@ public class Main {
         Database.getInstance().configure(databaseFile);
 
         TelnetServer server = new TelnetServer(telnetPort);
-        server.run();
+        server.start();
     }
 
 

@@ -8,28 +8,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.List;
 
-public class ClientThread implements Runnable {
+public class ClientThread extends Thread {
+
+    private final TelnetServer server;
     private final Socket socket;
+
+    private boolean isRunning = false;
+
     private PrintWriter writer;
     private BufferedReader reader;
 
-    private boolean running = false;
-
-    private List<PrintWriter> allUserWriters;
-
-    private String prompt = "> ";
     private EntityUser user = null;
 
 
-    public ClientThread(Socket socket, List<PrintWriter> allUserWriters) {
+    public ClientThread(Socket socket, TelnetServer server) {
         this.socket = socket;
-        this.allUserWriters = allUserWriters;
+        this.server = server;
         try {
             this.writer = new PrintWriter(socket.getOutputStream());
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.running = true;
+            this.isRunning = true;
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -38,15 +37,12 @@ public class ClientThread implements Runnable {
     @Override
     public void run() {
         if (connect()) {
-            writer.println("Welcome " + user.getLogin() + "!");
-            writer.flush();
-            broadcast("Joined the chat room!");
-            while (running) {
+            while (isRunning) {
                 String message = readInput();
                 if (message == null) {
-                    running = false;
+                    isRunning = false;
                 } else {
-                    this.broadcast(message);
+                    server.broadcast(this, message);
                 }
             }
         }
@@ -68,11 +64,9 @@ public class ClientThread implements Runnable {
             return false;
         }
 
-        allUserWriters.add(writer);
+        server.clientLogin(this);
         return true;
     }
-
-    /** IO Management */
 
     private String readInput() {
         String response = null;
@@ -81,30 +75,16 @@ public class ClientThread implements Runnable {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-        return  response;
+        return response;
     }
-
-    private void broadcast(String message) {
-        final String line = user.getLogin() + ": " + message;
-        for (PrintWriter w : allUserWriters) {
-            if (!w.equals(writer)) {
-                w.println(line);
-                w.flush();
-            }
-        }
-    }
-
-    /** Shutdown / Resource Management */
 
     private void shutdown() {
-        System.out.println("Shutdown connection..");
-        allUserWriters.remove(writer);
+        server.clientLogout(this);
         this.closeClosable(reader);
         this.closeClosable(writer);
         this.closeClosable(socket);
     }
 
-    /** Close an AutoClosable resource */
     private void closeClosable(AutoCloseable closeable) {
         if (closeable != null) {
             try {
@@ -113,5 +93,13 @@ public class ClientThread implements Runnable {
                 System.err.println(e.getMessage());
             }
         }
+    }
+
+    public EntityUser getUser() {
+        return user;
+    }
+
+    public PrintWriter getWriter() {
+        return writer;
     }
 }

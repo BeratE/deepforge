@@ -19,7 +19,7 @@ public class Authentication {
         Session session = null;
         Transaction t = null;
         try {
-            session = Database.getInstance().getFactory().openSession();
+            session = Database.getFactory().openSession();
             t = session.beginTransaction();
             user = UserDAO.retrieveByLogin(session, login);
             if (user != null && user.getPasswordHash().equals(encrypt(password, user.getPasswordSalt()))) {
@@ -45,7 +45,7 @@ public class Authentication {
         Transaction t = null;
         EntityUser user = null;
         try {
-            session = Database.getInstance().getFactory().openSession();
+            session = Database.getFactory().openSession();
             t = session.beginTransaction();
             user = UserDAO.retrieveByLogin(session, login);
             if (user == null) {
