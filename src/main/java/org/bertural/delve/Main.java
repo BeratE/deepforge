@@ -1,9 +1,8 @@
-package org.bertural.deepforge;
+package org.bertural.delve;
 
 import org.apache.commons.cli.*;
-import org.bertural.deepforge.data.Authentication;
-import org.bertural.deepforge.data.Database;
-import org.bertural.deepforge.telnet.TelnetServer;
+import org.bertural.delve.data.Database;
+import org.bertural.delve.telnet.TelnetServer;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 

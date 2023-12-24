@@ -1,6 +1,6 @@
-package org.bertural.deepforge.data.entities;
+package org.bertural.delve.data.entities;
 
-import org.bertural.deepforge.data.DMC;
+import org.bertural.delve.data.DMC;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 

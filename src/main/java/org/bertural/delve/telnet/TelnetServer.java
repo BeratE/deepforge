@@ -1,4 +1,4 @@
-package org.bertural.deepforge.telnet;
+package org.bertural.delve.telnet;
 
 import java.io.PrintWriter;
 import java.net.Socket;

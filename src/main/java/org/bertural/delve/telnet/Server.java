@@ -1,13 +1,10 @@
-package org.bertural.deepforge.telnet;
+package org.bertural.delve.telnet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Server extends Thread {
     protected static Logger logger = LoggerFactory.getLogger(Server.class);

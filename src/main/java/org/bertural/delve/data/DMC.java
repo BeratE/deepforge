@@ -1,4 +1,4 @@
-package org.bertural.deepforge.data;
+package org.bertural.delve.data;
 
 /**
  * DataModelConstants

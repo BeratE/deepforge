@@ -1,7 +1,7 @@
-package org.bertural.deepforge.telnet;
+package org.bertural.delve.telnet;
 
-import org.bertural.deepforge.data.Authentication;
-import org.bertural.deepforge.data.entities.EntityUser;
+import org.bertural.delve.data.Authentication;
+import org.bertural.delve.data.entities.EntityUser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

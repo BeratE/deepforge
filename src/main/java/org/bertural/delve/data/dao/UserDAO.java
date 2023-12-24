@@ -1,6 +1,6 @@
-package org.bertural.deepforge.data.dao;
+package org.bertural.delve.data.dao;
 
-import org.bertural.deepforge.data.entities.EntityUser;
+import org.bertural.delve.data.entities.EntityUser;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;

@@ -1,8 +1,8 @@
-package org.bertural.deepforge.data;
+package org.bertural.delve.data;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bertural.deepforge.data.dao.UserDAO;
-import org.bertural.deepforge.data.entities.EntityUser;
+import org.bertural.delve.data.dao.UserDAO;
+import org.bertural.delve.data.entities.EntityUser;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
