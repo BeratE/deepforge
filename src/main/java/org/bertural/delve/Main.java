@@ -1,6 +1,7 @@
 package org.bertural.delve;
 
 import org.apache.commons.cli.*;
+import org.bertural.delve.data.Banner;
 import org.bertural.delve.data.Database;
 import org.bertural.delve.telnet.TelnetServer;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
@@ -9,7 +10,7 @@ import org.jboss.logging.Logger;
 public class Main {
     private static Logger logger = LoggerFactory.logger(Main.class);
 
-    private static final String APP_NAME = "deepforge";
+    private static final String APP_NAME = "delve";
 
     // Command line parsing
     private static Options options = null;
@@ -25,7 +26,8 @@ public class Main {
         if (!parseCommandLineArguments(args))
             System.exit(1);
 
-        Database.getInstance().configure(databaseFile);
+        Database.configure(databaseFile);
+
 
         TelnetServer server = new TelnetServer(telnetPort);
         server.start();

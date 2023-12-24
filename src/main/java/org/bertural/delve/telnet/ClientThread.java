@@ -1,6 +1,7 @@
 package org.bertural.delve.telnet;
 
 import org.bertural.delve.data.Authentication;
+import org.bertural.delve.data.Banner;
 import org.bertural.delve.data.entities.EntityUser;
 
 import java.io.BufferedReader;
@@ -36,6 +37,10 @@ public class ClientThread extends Thread {
 
     @Override
     public void run() {
+        EscapeCode.CLEAR_SCREEN.print(writer);
+        EscapeCode.RESET_CURSOR.print(writer);
+        Banner.WELCOME.print(writer);
+
         if (connect()) {
             while (isRunning) {
                 String message = readInput();

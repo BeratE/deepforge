@@ -11,7 +11,6 @@ public class TelnetServer extends Server {
 
     public TelnetServer(int port) {
         super(port);
-
     }
 
     @Override
