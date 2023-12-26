@@ -1,7 +1,6 @@
 package org.bertural.delve;
 
 import org.apache.commons.cli.*;
-import org.bertural.delve.data.Banner;
 import org.bertural.delve.data.Database;
 import org.bertural.delve.telnet.TelnetServer;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;

@@ -3,6 +3,7 @@ package org.bertural.delve.telnet;
 import org.bertural.delve.data.Authentication;
 import org.bertural.delve.data.Banner;
 import org.bertural.delve.data.entities.EntityUser;
+import org.bertural.delve.state.StateMachine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,17 +12,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientThread extends Thread {
-
     private final TelnetServer server;
     private final Socket socket;
-
-    private boolean isRunning = false;
-
+    private boolean isRunning;
+    private StateMachine state;
     private PrintWriter writer;
     private BufferedReader reader;
-
-    private EntityUser user = null;
-
+    private EntityUser user;
 
     public ClientThread(Socket socket, TelnetServer server) {
         this.socket = socket;
@@ -31,19 +28,23 @@ public class ClientThread extends Thread {
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.isRunning = true;
         } catch (IOException e) {
+            isRunning = false;
             System.err.println(e.getMessage());
         }
     }
 
     @Override
     public void run() {
+        if (!isRunning)
+            return;
+
         EscapeCode.CLEAR_SCREEN.print(writer);
-        EscapeCode.RESET_CURSOR.print(writer);
+        EscapeCode.CURSOR_RESET.print(writer);
         Banner.WELCOME.print(writer);
 
         if (connect()) {
             while (isRunning) {
-                String message = readInput();
+                String message = readLine();
                 if (message == null) {
                     isRunning = false;
                 } else {
@@ -57,10 +58,10 @@ public class ClientThread extends Thread {
     private boolean connect() {
         writer.print("Enter username: ");
         writer.flush();
-        String username = readInput();
+        String username = readLine();
         writer.print("Enter password: ");
         writer.flush();
-        String password = readInput();
+        String password = readLine();
 
         user = Authentication.login(username, password);
         if (user == null) {
@@ -73,7 +74,7 @@ public class ClientThread extends Thread {
         return true;
     }
 
-    private String readInput() {
+    public String readLine() {
         String response = null;
         try {
             response = reader.readLine();
@@ -82,6 +83,15 @@ public class ClientThread extends Thread {
         }
         return response;
     }
+
+    public EntityUser getUser() {
+        return user;
+    }
+    
+    public PrintWriter getWriter() {
+        return writer;
+    }
+
 
     private void shutdown() {
         server.clientLogout(this);
@@ -98,13 +108,5 @@ public class ClientThread extends Thread {
                 System.err.println(e.getMessage());
             }
         }
-    }
-
-    public EntityUser getUser() {
-        return user;
-    }
-
-    public PrintWriter getWriter() {
-        return writer;
     }
 }
