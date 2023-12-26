@@ -45,19 +45,4 @@ public class StateMachine {
             currentState.onEnter();
         previousState = tmp;
     }
-
-    /** Do nothing */
-    private class EmptyState implements State {
-        public EmptyState() {
-        }
-        @Override
-        public void onExit() {
-        }
-        @Override
-        public void onEnter() {
-        }
-        @Override
-        public void onUpdate() {
-        }
-    }
 }
