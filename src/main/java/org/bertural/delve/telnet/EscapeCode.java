@@ -6,14 +6,15 @@ import java.io.PrintWriter;
 
 public enum EscapeCode implements Printable {
     CURSOR_UP("\033[M"),
-    CURSOR_SAVE("\033[s"),
     CURSOR_RESET("\033[H"),
-    CURSOR_RESTORE("\033[s"),
+    CURSOR_POS_POP("\033[u"),
+    CURSOR_POS_PUSH("\033[s"),
+    CURSOR_LINE_BEG("\033[0G"),
 
     CLEAR_SCREEN_BEG("\033[0J"),     // erase from cursor to beginning of screen
     CLEAR_SCREEN_END("\033[0J"),     // erase from cursor until end of screen
-    CLEAR_LINE_BEG("\033[0K"),       // erase from cursor to end of line
-    CLEAR_LINE_END("\033[1K"),       // erase start of line to the cursor
+    CLEAR_LINE_END("\033[0K"),       // erase from cursor to end of line
+    CLEAR_LINE_BEG("\033[1K"),       // erase start of line to the cursor
     CLEAR_SCREEN("\033[2J"),
     CLEAR_LINE("\033[2K"),              // erase the entire line
 

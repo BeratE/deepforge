@@ -1,9 +1,9 @@
-package org.bertural.delve.telnet;
+package org.bertural.delve.telnet.client;
 
-import org.bertural.delve.data.Authentication;
-import org.bertural.delve.data.Banner;
 import org.bertural.delve.data.entities.EntityUser;
 import org.bertural.delve.state.StateMachine;
+import org.bertural.delve.telnet.TelnetServer;
+import org.bertural.delve.telnet.client.state.InitialClientState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,18 +11,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientThread extends Thread {
+public class Client extends Thread {
     private final TelnetServer server;
     private final Socket socket;
     private boolean isRunning;
-    private StateMachine state;
     private PrintWriter writer;
     private BufferedReader reader;
     private EntityUser user;
+    private StateMachine stateMachine;
 
-    public ClientThread(Socket socket, TelnetServer server) {
+    public Client(Socket socket, TelnetServer server) {
         this.socket = socket;
         this.server = server;
+        this.stateMachine = new StateMachine();
         try {
             this.writer = new PrintWriter(socket.getOutputStream());
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -35,43 +36,17 @@ public class ClientThread extends Thread {
 
     @Override
     public void run() {
-        if (!isRunning)
-            return;
-
-        EscapeCode.CLEAR_SCREEN.print(writer);
-        EscapeCode.CURSOR_RESET.print(writer);
-        Banner.WELCOME.print(writer);
-
-        if (connect()) {
+        if (isRunning) {
+            stateMachine.setCurrent(new InitialClientState(this));
             while (isRunning) {
-                String message = readLine();
-                if (message == null) {
+                try {
+                    stateMachine.update();
+                } catch (Exception e) {
                     isRunning = false;
-                } else {
-                    server.broadcast(this, message);
                 }
             }
         }
         shutdown();
-    }
-
-    private boolean connect() {
-        writer.print("Enter username: ");
-        writer.flush();
-        String username = readLine();
-        writer.print("Enter password: ");
-        writer.flush();
-        String password = readLine();
-
-        user = Authentication.login(username, password);
-        if (user == null) {
-            writer.println("Invalid login!");
-            writer.flush();
-            return false;
-        }
-
-        server.clientLogin(this);
-        return true;
     }
 
     public String readLine() {
@@ -84,14 +59,10 @@ public class ClientThread extends Thread {
         return response;
     }
 
-    public EntityUser getUser() {
-        return user;
-    }
-    
-    public PrintWriter getWriter() {
-        return writer;
-    }
 
+    public void stopRunning() {
+        this.isRunning = false;
+    }
 
     private void shutdown() {
         server.clientLogout(this);
@@ -109,4 +80,16 @@ public class ClientThread extends Thread {
             }
         }
     }
+
+    public EntityUser getUser() { return user; }
+    public void setUser(EntityUser user) { this.user = user; }
+
+    public PrintWriter getWriter() {
+        return writer;
+    }
+    public StateMachine getStateMachine() {
+        return stateMachine;
+    }
+
+    public TelnetServer getServer() { return server; }
 }

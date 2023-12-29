@@ -15,7 +15,7 @@ public class StateMachine {
     }
 
 
-    public void update() {
+    public void update() throws Exception {
         currentState.onUpdate();
     }
 
