@@ -27,7 +27,6 @@ public class Main {
 
         Database.configure(databaseFile);
 
-
         TelnetServer server = new TelnetServer(telnetPort);
         server.start();
     }
